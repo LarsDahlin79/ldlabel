@@ -11,7 +11,7 @@
 #include "sysvar.h"
 #include "variables.h"
 
-const char version[] = "0.1";
+const char version[] = "0.2";
 const char software_name[] = "ldlabel";
 
 static void help_function(void);
@@ -73,7 +73,8 @@ static void help_function(void){
     fprintf(stdout, "<arg> can be:\n");
     fprintf(stdout, "-h / --help: This dialog\n");
     fprintf(stdout, "--version: Version info\n");
-    fprintf(stdout, "-t / --test : Unittest software\n");
+    fprintf(stdout, "-t / --test: Unittest software\n");
+    fprintf(stdout, "<filename>: Create a label\n");
 }
 
 /*

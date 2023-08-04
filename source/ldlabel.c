@@ -14,7 +14,7 @@
   Overview ldlabel protocol
   # Comments start with #, can be at the start of a line or in the middle, ldlabel ignores everything after until end-of-line or end-of-file
   actor, layout, style, size, colour    FUTURE VERSION
-  append, variable, value   FUTURE VERSION
+  append, variable, value
   arrow, layout, direction, x1, x2, width, colour (direction can be left, right, both or neither)  FUTURE VERSION
   barcode, layout, xpos, ypos, data, type, colour
   circle, layout, xpos, ypos, radious, colour    FUTURE VERSION
@@ -22,13 +22,13 @@
   font_location, directory
   image, layout, image, xpos, ypos     FUTURE VERSION
   import, filename  FUTURE VERSION
-  insert, variable, value, position   FUTURE VERSION
+  insert, variable, value, position
   layout, name, resolution, width, height, background colour
   line, layout, style, x1, y1, x2, y2, colour
   save, layout
   square, layout, x1, y1, x2, y2, colour  FUTURE VERSION
   text, layout, xpos, ypos, text, colour
-  update, variable, value  FUTURE VERSION
+  update, variable, value
   variable, name, value
  */
 
@@ -250,16 +250,11 @@ static bool com_append(char* line){
     char* value = utils_get_substring(line, &pos, ',');
     utils_trim_string(value);
 
-    bool had_quotes = false;
     char* variable_value = variable_read(name);
-    had_quotes = utils_text_is_quote(variable_value);
     utils_update_string(variable_value);
     utils_update_string(value);
     utils_append_string(variable_value, value);
     variable_update(name, variable_value);
-    if (had_quotes){
-	fprintf (stderr, "BLA\n");
-    }
 
     free(name);
     free(value);

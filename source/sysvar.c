@@ -59,7 +59,7 @@ char* sysvar_current_date(void){
     /* Check for optional argument days */
 
     /* Format YYYY-MM-DD */
-    /* Future versin: any format */
+    /* Future version: any format */
     sprintf (current_date,
 	     "%04d-%02d-%02d",
 	     local_time.tm_year + 1900,

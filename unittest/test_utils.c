@@ -123,6 +123,16 @@ bool test_utils(void){
 	fprintf (stderr, "Function utils_append_string failed, line %d\n", __LINE__);
 	return false;
     }
+    free(str);
+
+    str = malloc(10);
+    strcpy(str, "\"abcdef\"");
+    utils_append_string(str, "\"123456789\"");
+    if (17 != strlen(str) || strcmp(str, "\"abcdef123456789\"")){
+	fprintf (stderr, "Function utils_apped_quote_string failed, line %d\n", __LINE__);
+	return false;
+    }
+    free(str);
 
     char* str2 = malloc(27);
     if (NULL == str2){

@@ -2,8 +2,8 @@
 # and textfields
 
 layout, etikett.bmp, 24, 800, 600, 255, 255, 255, 0
-variable, name, I am
-append, name, Error, but I wish I wasnt
+variable, name, "I am"
+append, name, " Error, but I wish I wasnt"
 text, etikett.bmp, 10, 20, name, 0, 0, 0, 0
 barcode, etikett.bmp, 10, 200, 58, "0123456789", 0, 0, 0, 0
 save, etikett.bmp

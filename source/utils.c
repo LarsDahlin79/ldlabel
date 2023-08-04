@@ -90,7 +90,7 @@ uint32_t utils_get_substring_uint(char* line, uint16_t* start, char separator){
     return value;
 }
 
-/* TODO: Return a copy of the string without leading 
+/* Return a copy of the string without leading 
  * and trailing spaces and tabs 
  */
 void utils_trim_string(char* input){
@@ -121,9 +121,16 @@ void utils_trim_string(char* input){
 }
 
 void utils_append_string(char* original, char* append){
-    size_t len = strlen(original) + strlen(append);
-    original = realloc(original, sizeof(char) * len);
-    strncpy(original + strlen(original), append, strlen(append));
+    size_t len = 0u;
+    if (utils_text_is_quote(original)){
+	len = strlen(original) + strlen(append) - 2;
+	original = realloc(original, sizeof(char) * len);
+	strncpy(original + strlen(original) - 1, append + 1, strlen(append));
+    }else{
+	len = strlen(original) + strlen(append);
+	original = realloc(original, sizeof(char) * len);
+	strncpy(original + strlen(original), append, strlen(append));
+    }
     original[len] = '\0';
 }
 
