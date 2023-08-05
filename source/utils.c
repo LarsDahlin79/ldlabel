@@ -139,6 +139,39 @@ bool utils_text_is_quote(char* input){
     return (input[0] == '\"' && input[len] == '\"');
 }
 
+/*
+ * Copies the second given string into the position of the first given string.
+ */
+char* utils_insert_string(char* original, char* insert, uint32_t position){
+
+    size_t len = 0u;
+    len = strlen(original) + strlen(insert);
+    size_t second_half_len = len - position;
+
+    char* second_half = calloc(sizeof(char), second_half_len);
+    if (NULL == second_half){
+	return NULL;
+    }
+    strncpy(second_half, original + position, second_half_len);	
+
+    original = realloc(original, sizeof(char) * len);
+    if (NULL == original){
+	free(second_half);
+	return NULL;
+    }
+
+    if (utils_text_is_quote(insert)){
+	strncpy(original + position, insert + 1, strlen(insert) - 2);
+	strncpy(original + position + strlen(insert) - 2, second_half, strlen(second_half));
+    }else{
+	strncpy(original + position, insert, strlen(insert));
+	strncpy(original + position + strlen(insert), second_half, strlen(second_half));
+    }
+
+    free(second_half);
+    return original;
+}
+
 char* utils_update_string(char* text){
     char* value = NULL;
     if (variable_is_variable(text)){

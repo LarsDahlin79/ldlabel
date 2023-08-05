@@ -182,6 +182,25 @@ bool test_utils(void){
 	fprintf (stderr, "Function utils_get_barcode_id failed, line %d\n", __LINE__);
 	return false;
     }
+
+    value = malloc(10);
+    strcpy(value, "123456789");
+    value = utils_insert_string(value, "abcdef", 5);
+    if (strcmp(value, "12345abcdef6789")){
+	fprintf (stderr, "Function utils_insert_string failed, line %d\n", __LINE__);
+	return false;
+    }
+    free(value);
+
+    value = malloc(12);
+    strcpy(value, "\"123456789\"");
+    value = utils_insert_string(value, "\"abcdef\"", 6);
+    if (strcmp(value, "\"12345abcdef6789\"")){
+	fprintf (stderr, "Function utils_insert_string failed, line %d\n", __LINE__);
+	return false;
+    }
+    free(value);
+
     return true;
 }
 

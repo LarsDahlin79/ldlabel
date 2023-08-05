@@ -264,7 +264,17 @@ static bool com_append(char* line){
 }
 
 static bool com_insert(char* line){
-    printf ("Hello from insert command\n\n");
+    /* insert, variable, value, position */
+
+    uint16_t pos = strlen("insert,");
+    char* name = utils_get_substring(line, &pos, ',');
+    utils_trim_string(name);
+
+    char* value = utils_get_substring(line, &pos, ',');
+    utils_trim_string(value);
+
+    /* uint32_t position = utils_get_substring_uint(line, &pos, ','); */
+
     return false;
 }
 
