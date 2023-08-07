@@ -269,13 +269,20 @@ static bool com_insert(char* line){
     uint16_t pos = strlen("insert,");
     char* name = utils_get_substring(line, &pos, ',');
     utils_trim_string(name);
+    char* variable_value = variable_read(name);
 
     char* value = utils_get_substring(line, &pos, ',');
     utils_trim_string(value);
 
-    /* uint32_t position = utils_get_substring_uint(line, &pos, ','); */
+    uint32_t position = utils_get_substring_uint(line, &pos, ',');
 
-    return false;
+    variable_value = utils_insert_string(variable_value, value, position);
+    if (!variable_update(name, variable_value)){
+	fprintf (stderr, "Syntax error: Variable cannot be updated\n");
+	return false;
+    }
+
+    return true;
 }
 
 static bool com_update(char* line){
