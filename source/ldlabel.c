@@ -9,6 +9,8 @@
 #include "graphics.h"
 #include "sysvar.h"
 #include "variables.h"
+#include "main.h"
+#include "files.h"
 
 /*
   Overview ldlabel protocol
@@ -21,7 +23,7 @@
   font, fontname
   font_location, directory
   image, layout, image, xpos, ypos     FUTURE VERSION
-  import, filename  FUTURE VERSION
+  import, filename
   insert, variable, value, position
   layout, name, resolution, width, height, background colour
   line, layout, style, x1, y1, x2, y2, colour
@@ -79,6 +81,7 @@ bool ldlabel_execute(char* line){
     while (NULL != commands[it].command){
 	if (utils_string_begins_with(line, commands[it].command)){
 	    success = commands[it].function_ptr(line);
+	    break;
 	}
 	it++;
     }
@@ -97,13 +100,14 @@ static bool com_layout(char* line){
     sysvar_set_layout_resolution(resolution);
 
     width = utils_get_substring_uint(line, &pos, ',');
+
     height = utils_get_substring_uint(line, &pos, ',');
     sysvar_set_layout_size(width, height);
 
     bool success = graphics_create(layout_name, width, height, resolution);
     if (!success){
-	/* TODO: cleanup */
-	return false;
+	free(layout_name);
+	return success;
     }
     
     uint32_t red = utils_get_substring_uint(line, &pos, ',');
@@ -113,7 +117,6 @@ static bool com_layout(char* line){
 
     success = graphics_fill_image(layout_name, red, green, blue, alpha);
     free(layout_name);
-    
     return success;
 }
 
@@ -195,7 +198,7 @@ static bool com_barcode(char* line){
 }
 
 static bool com_line(char* line){
-    printf ("Hello from lien command\n\n");
+    printf ("Hello from line command\n\n");
     return false;
 }
 
@@ -231,8 +234,34 @@ static bool com_variable(char* line){
 }
 
 static bool com_import(char* line){
-    printf ("Hello from import command\n\n");
-    return false;
+    /* import, filename */
+    uint16_t pos = strlen("import,");
+
+    /* get argument filename */
+    char* filename = utils_get_substring(line, &pos, ',');
+    utils_trim_string(filename);
+
+    /* check for variable and if so, read the value */
+    char* updated_filename = utils_update_string(filename);
+    if (utils_text_is_quote(updated_filename)){
+	size_t len = strlen(updated_filename);
+	strncpy(updated_filename, updated_filename + 1, len - 2);
+	updated_filename[len - 2] = '\0';
+    }
+
+    /* check that the file exists and is readable */
+    FILE* fp = fopen(updated_filename, "r");
+    if (NULL == fp){
+	fprintf (stderr, "Unable to open file %s\n", updated_filename);
+	return 1;
+    }
+    /* read the data from the file */
+    char* data = read_file_content(fp);
+    main_add_layout_commands(data);
+    fclose(fp);
+
+    free(updated_filename);
+    return true;
 }
 
 bool ldlabel_is_correct_layout(char* layout_data){

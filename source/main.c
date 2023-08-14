@@ -10,12 +10,15 @@
 #include "utils.h"
 #include "sysvar.h"
 #include "variables.h"
+#include "main.h"
+#include "files.h"
 
 const char version[] = "0.2";
 const char software_name[] = "ldlabel";
+static char* layout_data = NULL;
+static uint16_t layout_pos = 0;
 
 static void help_function(void);
-static char* read_layout_data(FILE* stream);
 
 int main(int argc, char** argv){
 
@@ -50,16 +53,23 @@ int main(int argc, char** argv){
 	sysvar_set_default_font("DejaVuSans.ttf");
 	variable_init();
 	FILE* fp = fopen(filename, "r");
-	char* layout_data = read_layout_data(fp);
-	uint16_t pos = 0;
+	if (NULL == fp)
+	{
+	    fprintf (stderr, "Unable to open file %s\n", filename);
+	    return 1;
+	}
+	layout_data = read_file_content(fp);
+	fclose(fp);
+	layout_pos = 0;
 	while (true){
-	    char* current_line = utils_get_substring(layout_data, &pos, '\n');
+	    char* current_line = utils_get_substring(layout_data, &layout_pos, '\n');
 	    if (NULL == current_line){
 		break;
 	    }
 	    ldlabel_execute(current_line);
 	    free(current_line);
 	}
+	
     }
     return 0;
 }
@@ -78,46 +88,21 @@ static void help_function(void){
 }
 
 /*
- * Read layout data from the given stream, can be either a file or stdin.
+ * Add the the given text to the layout buffer.
  */
-static char* read_layout_data(FILE* stream){
-    const size_t max_size = 100;
-    char* layout_data = NULL;
-    char temp_buffer[max_size];
-    char next_char = 0;
-    size_t pos = 0;
-    size_t buffer_pos = 0;
-    
-    /* read until end-of-file */
-    while(true){
-	next_char = fgetc(stream);
-	if (next_char == EOF){
-	    buffer_pos += pos;
-	    temp_buffer[pos] = '\0';
-	    break;
-	}
-	temp_buffer[pos] = next_char;
-	pos++;
-	if (pos >= max_size){
-	    pos = 0;
-	    if (NULL == layout_data){
-		layout_data = calloc(sizeof(char), max_size);
-	    }else{
-		layout_data = realloc(layout_data, sizeof(char) * (buffer_pos + max_size));
-	    }
-	    strncpy(layout_data + buffer_pos, temp_buffer, strlen(temp_buffer));
-	    buffer_pos += max_size;
-	}
+bool main_add_layout_commands(char* new_layout_data){
+
+    /* layout_pos is the current position */
+    /* layout_pos = utils_find_char_index(layout_data, layout_pos,'\n'); */
+
+    /* user is importing at the end of the file, which is pointless, but should */
+    /* still not lead to a program crash */
+    if (0xFFFF == layout_pos){
+	layout_pos = utils_find_char_index(layout_data, layout_pos,'\0');
     }
 
-    if (NULL == layout_data){
-	layout_data = calloc(sizeof(char), pos);
-    }else{
-	layout_data = realloc(layout_data, sizeof(char) * (pos + buffer_pos));
-    }
-    if (NULL != layout_data){
-	strncpy(layout_data + buffer_pos - pos, temp_buffer, strlen(temp_buffer));
-	layout_data[buffer_pos] = '\0';
-    }
-    return layout_data;
+    layout_data = utils_insert_string(layout_data, new_layout_data, layout_pos);
+    layout_pos = utils_find_char_index(layout_data, layout_pos,'\n');
+
+    return true;
 }

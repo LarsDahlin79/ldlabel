@@ -201,6 +201,20 @@ bool test_utils(void){
     }
     free(value);
 
+    value = malloc(11);
+    strcpy(value, "123456\n789");
+    uint16_t new_pos = utils_find_char_index(value, 0, '\n');
+    if (6 != new_pos){
+	fprintf (stderr, "Function utils_find_char_index failed, line %d\n", __LINE__);
+	return false;
+    }
+
+    new_pos = utils_find_char_index(value, 0, 'Z');
+    if (0xFFFF != new_pos){
+	fprintf (stderr, "Function utils_find_char_index failed, line %d\n", __LINE__);
+	return false;
+    }
+
     return true;
 }
 

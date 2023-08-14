@@ -10,4 +10,4 @@ Cleanup of code
 Added append command
 Added update command
 Added insert command
-
+Added import command

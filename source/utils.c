@@ -144,6 +144,11 @@ bool utils_text_is_quote(char* input){
  */
 char* utils_insert_string(char* original, char* insert, uint32_t position){
 
+    if (position > strlen(original)){
+	fprintf (stderr, "ERROR: Trying to insert outside of the line");
+	return false;
+    }
+
     size_t len = 0u;
     len = strlen(original) + strlen(insert);
     size_t second_half_len = len - position;
@@ -185,6 +190,17 @@ char* utils_update_string(char* text){
 	return value;
     }
     return text;
+}
+
+uint16_t utils_find_char_index(char* string, uint16_t index, char target_char){
+    while (string[index] != '\0' && string[index] != target_char){
+	index++;
+    }
+    if (string[index] == target_char){
+	return index;
+    }
+
+    return 0xFFFF;
 }
 
 /* Based on the constants in zint.h, map name with id number */
@@ -317,6 +333,4 @@ uint16_t utils_get_barcode_id(char* barcode_type){
     }
     return 0;
 }
-
-
 

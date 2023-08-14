@@ -10,4 +10,4 @@ bool utils_text_is_quote(char* input);
 char* utils_insert_string(char* original, char* insert, uint32_t position);
 char* utils_update_string(char* text);
 uint16_t utils_get_barcode_id(char* barcode_type);
-
+uint16_t utils_find_char_index(char* string, uint16_t index, char target_char);

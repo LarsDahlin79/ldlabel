@@ -8,7 +8,7 @@ CC=gcc
 CFLAGS=-Wall -Werror -g -ansi -std=c99
 SRC_DIR=../source
 INC_DIR=-I../include -I../unittest
-OBJ=main.o ldlabel.o utils.o graphics.o freetype.o zint_interface.o variables.o sysvar.o test_zint.o test_main.o test_utils.o test_bitmap.o test_graphics.o test_freetype.o test_variables.o test_sys_var.o test_ldlabel.o
+OBJ=main.o ldlabel.o utils.o graphics.o freetype.o zint_interface.o variables.o sysvar.o files.o test_zint.o test_main.o test_utils.o test_bitmap.o test_graphics.o test_freetype.o test_variables.o test_sys_var.o test_ldlabel.o
 TEST_DIR=../unittest
 BITMAP=/usr/local/lib/libbitmap.so
 
@@ -37,6 +37,9 @@ variables.o: $(SRC_DIR)/variables.c
 	$(CC) $(CFLAGS) $(INC_DIR) -c -o $@ $^
 
 sysvar.o: $(SRC_DIR)/sysvar.c
+	$(CC) $(CFLAGS) $(INC_DIR) -c -o $@ $^
+
+files.o: $(SRC_DIR)/files.c
 	$(CC) $(CFLAGS) $(INC_DIR) -c -o $@ $^
 
 test_bitmap.o: $(TEST_DIR)/test_bitmap.c
