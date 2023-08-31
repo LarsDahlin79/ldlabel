@@ -27,8 +27,9 @@
   insert, variable, value, position
   layout, name, resolution, width, height, background colour
   line, layout, style, x1, y1, x2, y2, colour
+  rectangle, layout, x1, y1, x2, y2, colour
   save, layout
-  square, layout, x1, y1, x2, y2, colour  FUTURE VERSION
+  square, layout, x, y, width, colour
   text, layout, xpos, ypos, text, colour
   update, variable, value
   variable, name, value
@@ -51,6 +52,7 @@ static bool com_update(char* line);
 static bool com_font(char* line);
 static bool com_font_location(char* line);
 static bool com_actor(char* line);
+static bool com_rectangle(char* line);
 
 struct ldlabel_command{
     ldlabel_com_ptr* function_ptr;
@@ -72,6 +74,7 @@ struct ldlabel_command{
     {com_font_location, "font_location"},  /* must come before font command */
     {com_font, "font"},
     {com_actor, "actor"},
+    {com_rectangle, "rectangle"},
     {NULL, NULL},
 };
 
@@ -186,15 +189,12 @@ static bool com_barcode(char* line){
     uint32_t blue = utils_get_substring_uint(line, &pos, ',');
     uint32_t alpha = utils_get_substring_uint(line, &pos, ',');
 
-    if (!graphics_draw_barcode(layout, type, data, xpos, ypos,
-			       red, green, blue, alpha)){
-	return false;
-    }
-
+    bool success = graphics_draw_barcode(layout, type, data, xpos, ypos,
+					 red, green, blue, alpha);
     free(layout);
     free(data);
 
-    return true;
+    return success;
 }
 
 static bool com_line(char* line){
@@ -203,12 +203,37 @@ static bool com_line(char* line){
 }
 
 static bool com_square(char* line){
-    printf ("Hello from square command\n\n");
-    return false;
+    /* square, layout, x, y, width, colour */
+
+    /* get layout name */
+    uint16_t pos = strlen("square,");
+    char* layout = utils_get_substring(line, &pos, ',');
+    utils_trim_string(layout);
+
+    /* get x coordinate */
+    uint32_t xpos = utils_get_substring_uint(line, &pos, ',');
+
+    /* get y coordinate */
+    uint32_t ypos = utils_get_substring_uint(line, &pos, ',');
+
+    /* get width */
+    uint32_t width = utils_get_substring_uint(line, &pos, ',');
+
+    uint32_t red = utils_get_substring_uint(line, &pos, ',');
+    uint32_t green = utils_get_substring_uint(line, &pos, ',');
+    uint32_t blue = utils_get_substring_uint(line, &pos, ',');
+    uint32_t alpha = utils_get_substring_uint(line, &pos, ',');
+
+    bool success = graphics_draw_square(layout, xpos, ypos, xpos+width, ypos+width, red, green, blue, alpha);
+
+    free(layout);
+    return success;
 }
 
 static bool com_arrow(char* line){
-    printf ("Hello from arrow command\n\n");
+    /* arrow, layout, direction, x1, x2, width, colour (direction can be left, right, both or neither) */
+
+    
     return false;
 }
 
@@ -339,5 +364,10 @@ static bool com_font_location(char* line){
 
 static bool com_actor(char* line){
     printf ("Hello from actor command\n\n");
+    return false;
+}
+
+static bool com_rectangle(char* line){
+    printf ("Hello from rectangle command\n\n");
     return false;
 }
