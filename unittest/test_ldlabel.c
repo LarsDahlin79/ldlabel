@@ -50,6 +50,12 @@ bool test_ldlabel(void){
 	return false;
     }
 
+    success = ldlabel_execute("rectangle, my_layout.bmp, 700, 100, 25, 50, 0, 0, 0, 0");
+    if (!success){
+	fprintf (stderr, "Error in function square\n");
+	return false;
+    }
+
     success = ldlabel_execute("save, my_layout.bmp");
     if (!success){
 	fprintf (stderr, "Error in function save\n");

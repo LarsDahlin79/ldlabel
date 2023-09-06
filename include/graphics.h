@@ -5,10 +5,10 @@ bool graphics_create(char* filename, uint16_t width, uint16_t height, uint8_t re
 bool graphics_set_pixel(char* filename, uint32_t xpos, uint32_t ypos,
 			uint32_t red, uint32_t green, uint32_t blue,
 			uint32_t alpha);
-bool graphics_draw_square(char* filename, uint32_t x1, uint32_t y1,
-			  uint32_t x2, uint32_t y2,
-			  uint32_t red, uint32_t green, uint32_t blue,
-			  uint32_t alpha);
+bool graphics_draw_rectangle(char* filename, uint32_t x1, uint32_t y1,
+			    uint32_t x2, uint32_t y2,
+			    uint32_t red, uint32_t green, uint32_t blue,
+			    uint32_t alpha);
 bool graphics_draw_line(char* filename, uint32_t x1, uint32_t y1,
 			uint32_t x2, uint32_t y2,
 			uint32_t red, uint32_t green, uint32_t blue,

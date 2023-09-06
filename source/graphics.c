@@ -47,7 +47,7 @@ bool graphics_set_pixel(char* filename, uint32_t xpos, uint32_t ypos,
     return true;
 }
 
-bool graphics_draw_square(char* filename, uint32_t x1, uint32_t y1,
+bool graphics_draw_rectangle(char* filename, uint32_t x1, uint32_t y1,
 			  uint32_t x2, uint32_t y2,
 			  uint32_t red, uint32_t green, uint32_t blue,
 			  uint32_t alpha){
