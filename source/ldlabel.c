@@ -224,7 +224,7 @@ static bool com_square(char* line){
     uint32_t blue = utils_get_substring_uint(line, &pos, ',');
     uint32_t alpha = utils_get_substring_uint(line, &pos, ',');
 
-    bool success = graphics_draw_square(layout, xpos, ypos, xpos+width, ypos+width, red, green, blue, alpha);
+    bool success = graphics_draw_rectangle(layout, xpos, ypos, xpos+width, ypos+width, red, green, blue, alpha);
 
     free(layout);
     return success;
@@ -368,6 +368,30 @@ static bool com_actor(char* line){
 }
 
 static bool com_rectangle(char* line){
-    printf ("Hello from rectangle command\n\n");
-    return false;
+    /* rectangle, layout, x, y, width, height, colour */
+
+    /* get layout name */
+    uint16_t pos = strlen("rectangle,");
+    char* layout = utils_get_substring(line, &pos, ',');
+    utils_trim_string(layout);
+
+    /* get x coordinate */
+    uint32_t xpos = utils_get_substring_uint(line, &pos, ',');
+
+    /* get y coordinate */
+    uint32_t ypos = utils_get_substring_uint(line, &pos, ',');
+
+    /* get width */
+    uint32_t width = utils_get_substring_uint(line, &pos, ',');
+    uint32_t height = utils_get_substring_uint(line, &pos, ',');
+
+    uint32_t red = utils_get_substring_uint(line, &pos, ',');
+    uint32_t green = utils_get_substring_uint(line, &pos, ',');
+    uint32_t blue = utils_get_substring_uint(line, &pos, ',');
+    uint32_t alpha = utils_get_substring_uint(line, &pos, ',');
+
+    bool success = graphics_draw_rectangle(layout, xpos, ypos, xpos+width, ypos+height, red, green, blue, alpha);
+
+    free(layout);
+    return success;
 }
