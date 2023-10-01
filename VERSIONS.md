@@ -13,6 +13,7 @@ Added insert command
 Added import command
 
 0.3
+Date: 2023-10-01
 Added square command
 Added rectangle command
-Date: TBD
+
